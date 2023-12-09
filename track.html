@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitness Tracking</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      h2 {
+        margin-bottom: 20px;
+      }
+
+      form {
+        max-width: 400px;
+        margin: auto;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .feedback {
+        margin-top: 10px;
+        color: red;
+      }
+
+      .dashboard {
+        margin-top: 30px;
+      }
+
+      .dashboard-item {
+        display: inline-block;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Fitness Tracking</h2>
+
+    <section id="logActivity" class="section">
+      <h3>Log Activity</h3>
+      <form id="activityForm">
+        <label for="activity">Activity:</label>
+        <input type="text" id="activity" name="activity" required />
+
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" required />
+
+        <label for="calorie">Calorie</label>
+        <input type="number" id="calorie" name="calorie" required />
+
+        <div id="setsSection" style="display: none">
+          <label for="sets">Number of Sets:</label>
+          <input type="number" id="sets" name="sets" />
+        </div>
+
+        <div id="countSection" style="display: none">
+          <label for="count">Count for Each Set:</label>
+          <input type="number" id="count" name="count" />
+        </div>
+
+        <button type="button" onclick="logActivity()">Log Activity</button>
+
+        <p class="feedback" id="activityFeedback"></p>
+      </form>
+    </section>
+
+    <section id="viewHistory" class="section">
+      <h3>View Activity History</h3>
+      <button type="button" onclick="viewHistory()">View History</button>
+      <p id="historyDisplay"></p>
+    </section>
+
+    <section class="dashboard">
+      <h3>Dashboard</h3>
+      <div class="dashboard-item">
+        <h4>Total Activities</h4>
+        <p id="totalActivities">0</p>
+      </div>
+      <div class="dashboard-item">
+        <h4>Average Duration</h4>
+        <p id="averageDuration">0 minutes</p>
+      </div>
+    </section>
+
+    <script>
+      function logActivity() {
+        const activity = document.getElementById("activity").value;
+        const duration = document.getElementById("duration").value;
+
+        if (activity && duration) {
+          const activityFeedback = document.getElementById("activityFeedback");
+
+          if (activity.toLowerCase() !== "cardio") {
+            const setsSection = document.getElementById("setsSection");
+            const countSection = document.getElementById("countSection");
+
+            setsSection.style.display = "block";
+            countSection.style.display = "block";
+
+            const sets = document.getElementById("sets").value;
+            const count = document.getElementById("count").value;
+
+            // Validate sets and
+            if (!sets || !count) {
+              activityFeedback.textContent =
+                "Please enter both sets and count for non-cardio activities.";
+              return;
+            }
+          }
+
+          const activityLog = `Activity: ${activity}, Duration: ${duration} minutes`;
+
+          const activityHistory =
+            JSON.parse(localStorage.getItem("activity_history")) || [];
+          activityHistory.push(activityLog);
+          localStorage.setItem(
+            "activity_history",
+            JSON.stringify(activityHistory)
+          );
+
+          updateDashboard(activityHistory);
+
+          document.getElementById("setsSection").style.display = "none";
+          document.getElementById("countSection").style.display = "none";
+
+          activityFeedback.textContent = `Activity logged: ${activity} for ${duration} minutes`;
+        } else {
+          document.getElementById("activityFeedback").textContent =
+            "Please enter both activity and duration.";
+        }
+      }
+
+      function viewHistory() {
+        // Retrieve and display activity history from local storage
+        const activityHistory =
+          JSON.parse(localStorage.getItem("activity_history")) || [];
+        const historyDisplay = document.getElementById("historyDisplay");
+
+        if (activityHistory.length > 0) {
+          const historyList = activityHistory
+            .map((log) => `<li>${log}</li>`)
+            .join("");
+          historyDisplay.innerHTML = `<ul>${historyList}</ul>`;
+        } else {
+          historyDisplay.innerHTML = "No activity history available.";
+        }
+
+        updateDashboard(activityHistory);
+      }
+
+      function updateDashboard(activityHistory) {
+        document.getElementById("totalActivities").textContent =
+          activityHistory.length;
+
+        const totalDuration = activityHistory.reduce((total, log) => {
+          const match = log.match(/Duration: (\d+) minutes/);
+          return total + (match ? parseInt(match[1], 10) : 0);
+        }, 0);
+        const averageDuration =
+          activityHistory.length > 0
+            ? totalDuration / activityHistory.length
+            : 0;
+        document.getElementById(
+          "averageDuration"
+        ).textContent = `${averageDuration.toFixed(2)} minutes`;
+      }
+    </script>
+    <a href="feedback.html"><h4>feedback</h4></a>
+    <a href="user _login.html"><h4>login</h4></a>
+  </body>
+</html>

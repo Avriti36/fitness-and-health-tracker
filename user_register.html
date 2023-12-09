@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      form {
+        max-width: 400px;
+        margin: auto;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+      🎆 button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .feedback {
+        margin-top: 10px;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>User Registration</h2>
+
+    <form id="registrationForm">
+      <label for="regUsername">Username:</label>
+      <input type="text" id="regUsername" name="regUsername" required />
+
+      <label for="regMail">Email:</label>
+      <input type="text" id="regMail" name="regMail" required />
+
+      <label for="regPassword">Password:</label>
+      <input type="password" id="regPassword" name="regPassword" required />
+
+      <button type="button" onclick="register()">Register</button>
+
+      <p class="feedback" id="registrationFeedback"></p>
+    </form>
+
+    <script>
+      function register() {
+        const regUsername = document.getElementById("regUsername").value;
+        const regPassword = document.getElementById("regPassword").value;
+
+        try {
+          const userProfiles =
+            JSON.parse(localStorage.getItem("userProfiles")) || [];
+          const existingUser = userProfiles.find(
+            (u) => u.username === regUsername
+          );
+
+          if (existingUser) {
+            document.getElementById("registrationFeedback").textContent =
+              "Username already exists. Please choose a different username.";
+          } else {
+            userProfiles.push({ username: regUsername, password: regPassword });
+            localStorage.setItem("userProfiles", JSON.stringify(userProfiles));
+
+            document.getElementById("registrationFeedback").textContent =
+              "Registration successful! You can now log in.";
+
+            document.getElementById("regUsername").value = "";
+            document.getElementById("regPassword").value = "";
+          }
+        } catch (error) {
+          console.error("Error during registration:", error);
+          document.getElementById("registrationFeedback").textContent =
+            "An error occurred during registration. Please try again.";
+        }
+      }
+    </script>
+    <a href="feedback.html"><h4>feedback</h4></a>
+    <a href="userLogin.html"><h4>login</h4></a>
+  </body>
+</html>

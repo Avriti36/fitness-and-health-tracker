@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <background-color=#FFCF33></background-color>
+    <title> User Feedback</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="user_register.html">Home</a></li>
+        <li><a href="user_register.html".html">New User</a></li>
+        <li><a href="userLogin.html">login profile</a> </li>
+      </ul>
+    </nav>
+    <h2>Feedback Page</h2>
+    <form id="feedbackForm">
+      <label for="feedback">Your Feedback:</label>
+      <textarea
+        id="feedback"
+        name="feedback"
+        rows="4"
+        cols="50"
+        required></textarea>
+      <button type="button" onclick="submitFeedback()">Submit Feedback</button>
+    </form>
+    <script src="feedback.js"></script>
+  </body>
+</html>
